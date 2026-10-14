@@ -1,0 +1,20 @@
+[
+  {
+    "version": "1.0.0",
+    "date": "2026-10-15",
+    "title": "Initial release",
+    "description": "First standalone community release of Schema Drift Detector for Voiden.",
+    "changes": {
+      "Added": [
+        "Inferred structural schema trees from JSON and XML responses",
+        "Breaking change detection (field removals, type mutations, nullability changes)",
+        "Non-breaking additions and schema evolution tracking",
+        "Ignore rules supporting exact match, wildcards (*.timestamp), and regex",
+        "Baseline schema manager with auto-recording and manual pin/lock",
+        "Response Panel section with diff metrics, search filter, and visual status badges",
+        "Export reports in Markdown, JSON, HTML, and plain text formats",
+        "Headless runner for automated CI testing pipelines"
+      ]
+    }
+  }
+]

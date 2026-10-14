@@ -1,0 +1,47 @@
+{
+  "id": "schema-drift-detector",
+  "name": "Schema Drift Detector",
+  "description": "Detect structural changes, breaking regressions, and schema evolutions in API response payloads (JSON & XML).",
+  "version": "1.0.0",
+  "voidenVersion": ">=2.0.0",
+  "author": "Divya Raval",
+  "type": "community",
+  "priority": 45,
+  "icon": "GitCompare",
+  "repo": "https://github.com/DivyaRaval1909/voiden-schema-drift-detector",
+  "readme": "# Schema Drift Detector\n\nDetect and visualize structural changes, breaking regressions, and schema evolutions in API responses across executions.\n\n## Features\n\n- **JSON & XML Support**: Inferred structural schemas from JSON and XML payloads.\n- **Breaking Change Detection**: Flags removed fields, mutated types, array mutations, and nullability shifts.\n- **Non-Breaking Evolution**: Identifies additive changes and new fields.\n- **Ignore Rules**: Wildcard (`*.timestamp`, `data[].id`), exact path, and regex pattern matching for dynamic fields.\n- **Baseline Management**: Auto-recording on initial run, manual pinning/updating, and reset per endpoint.\n- **Response Panel Integration**: Collapsible `Schema Drift` tab with interactive diff view, metric summaries, and search filter.\n- **Export Reports**: Markdown tables, JSON, ASCII text, and HTML exports.\n- **Headless CI Runner**: Programmatic API for CI/automated testing pipelines.",
+  "mainProcess": false,
+  "hasRunner": true,
+  "permissions": [
+    "events",
+    "requestPipeline"
+  ],
+  "capabilities": {
+    "ui": {
+      "buttons": [
+        {
+          "id": "schema-drift-detector-btn",
+          "location": "sidebar-left",
+          "icon": "GitCompare",
+          "tooltip": "Schema Drift Detector",
+          "description": "Opens Schema Drift Manager to review API baselines and drift history"
+        }
+      ],
+      "description": "Adds Schema Drift Detector to sidebar, response panel, and status bar"
+    },
+    "responsePanel": {
+      "id": "schema-drift",
+      "name": "Schema Drift"
+    }
+  },
+  "features": [
+    "Infer structural response schemas from JSON and XML payloads",
+    "Detect breaking schema changes (missing fields, incompatible types, nullability changes)",
+    "Track non-breaking changes (new fields, optional extensions)",
+    "Configurable field ignore rules with wildcard and regex matching (e.g. *.timestamp, data[].id)",
+    "Baseline schema manager with auto-record and manual pin/lock options",
+    "Integrated Response Panel view with visual diffs and status badges",
+    "Export comparison reports to Markdown, JSON, HTML, and Text formats",
+    "Headless runner for CI and automated drift testing"
+  ]
+}
