@@ -76,7 +76,7 @@ const factory = (context: any) => ({
     context.onProcessResponse?.(async (response: any, _blocks: any, request: any) => {
       if (context?.verbose) {
         console.log(
-          `[schema-drift-detector] Checked response schema for ${request?.method || 'REQUEST'} ${request?.url || ''} (${response?.status || 200})`
+          `[schema-drift-detector] Checked response schema for ${request?.method || 'REQUEST'} ${request?.url || ''} (${response?.statusCode ?? response?.status ?? 200})`
         );
       }
     });

@@ -126,5 +126,25 @@ describe('schemaInferrer', () => {
       expect(format).toBe('xml');
       expect(schema.type).toBe('object');
     });
+
+    it('handles Buffer payloads and decodes JSON structure', () => {
+      const raw = Buffer.from(JSON.stringify({ json: { id: 10, name: 'Alice' } }));
+      const { schema, format } = inferPayloadSchema(raw);
+      expect(format).toBe('json');
+      expect(schema.type).toBe('object');
+      expect(schema.properties?.json?.properties?.id?.type).toBe('integer');
+      expect(schema.properties?.json?.properties?.name?.type).toBe('string');
+      // Must not contain numeric byte offset keys
+      expect(schema.properties?.['0']).toBeUndefined();
+    });
+
+    it('handles Uint8Array payloads and decodes JSON structure', () => {
+      const raw = new TextEncoder().encode(JSON.stringify({ json: { id: '10' } }));
+      const { schema, format } = inferPayloadSchema(raw);
+      expect(format).toBe('json');
+      expect(schema.type).toBe('object');
+      expect(schema.properties?.json?.properties?.id?.type).toBe('string');
+      expect(schema.properties?.['0']).toBeUndefined();
+    });
   });
 });

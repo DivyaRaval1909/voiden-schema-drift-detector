@@ -37,10 +37,12 @@ const schemaDriftDetectorPlugin = (context: PluginContext) => {
       if (typeof (context as any).onProcessResponse === 'function') {
         (context as any).onProcessResponse(async (response: any, docContent?: any) => {
           try {
-            if (!response || response.status === undefined) return;
+            const status = response.statusCode ?? response.status;
+            if (!response || status === undefined) return;
 
             const tabId =
               (await (context as any).response?.getCurrentTabId?.()) ||
+              (await (context as any).tab?.getActiveTab?.())?.id ||
               response?.tabId ||
               '__default__';
 
@@ -70,7 +72,7 @@ const schemaDriftDetectorPlugin = (context: PluginContext) => {
                   tabId,
                   requestUrl: url,
                   requestMethod: method,
-                  statusCode: response.status,
+                  statusCode: status,
                   baselineSchema: undefined,
                   currentSchema,
                   format,
@@ -84,7 +86,7 @@ const schemaDriftDetectorPlugin = (context: PluginContext) => {
                 tabId,
                 requestUrl: url,
                 requestMethod: method,
-                statusCode: response.status,
+                statusCode: status,
                 baselineSchema: baselineEntry.schema,
                 currentSchema,
                 format,
@@ -119,7 +121,10 @@ const schemaDriftDetectorPlugin = (context: PluginContext) => {
           icon: 'GitCompare',
           tooltip: 'API Schema Drift Detector',
           onClick: async () => {
-            const currentTabId = await (context as any).response?.getCurrentTabId?.();
+            const currentTabId =
+              (await (context as any).response?.getCurrentTabId?.()) ||
+              (await (context as any).tab?.getActiveTab?.())?.id ||
+              '__default__';
             const report = driftStore.getReport(currentTabId);
             if (report) {
               if (report.hasBreakingChanges) {

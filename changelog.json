@@ -1,5 +1,18 @@
 [
   {
+    "version": "1.0.1",
+    "date": "2026-10-24",
+    "title": "Fix response status check, tabId fallback, and payload buffer decoding",
+    "description": "Fixes for Voiden host app integration and response handling.",
+    "changes": {
+      "Fixed": [
+        "Support response.statusCode in onProcessResponse hook to prevent early exit",
+        "Fall back to active tab ID via context.tab.getActiveTab() when response.getCurrentTabId() is cleared",
+        "Decode Buffer and Uint8Array response bodies before schema inference to prevent byte index field paths"
+      ]
+    }
+  },
+  {
     "version": "1.0.0",
     "date": "2026-10-15",
     "title": "Initial release",

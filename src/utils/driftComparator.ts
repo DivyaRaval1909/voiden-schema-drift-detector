@@ -171,6 +171,13 @@ export function compareSchemas(
     return differences;
   }
 
+function formatPropertyPath(currentPath: string, key: string): string {
+  if (/^\d+$/.test(key)) {
+    return currentPath ? `${currentPath}[${key}]` : `[${key}]`;
+  }
+  return currentPath ? `${currentPath}.${key}` : key;
+}
+
   // 3. Object Properties Comparison
   if (baselineTypes.includes('object') && currentTypes.includes('object')) {
     const baselineProps = baseline.properties || {};
@@ -181,7 +188,7 @@ export function compareSchemas(
 
     // Removed fields
     for (const key of baselineKeys) {
-      const fieldPath = currentPath ? `${currentPath}.${key}` : key;
+      const fieldPath = formatPropertyPath(currentPath, key);
       if (!(key in currentProps)) {
         pushDiff({
           path: fieldPath,
@@ -205,7 +212,7 @@ export function compareSchemas(
 
     // Added fields
     for (const key of currentKeys) {
-      const fieldPath = currentPath ? `${currentPath}.${key}` : key;
+      const fieldPath = formatPropertyPath(currentPath, key);
       if (!(key in baselineProps)) {
         pushDiff({
           path: fieldPath,

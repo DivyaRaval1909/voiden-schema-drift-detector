@@ -325,11 +325,25 @@ export function inferPayloadSchema(
     return { schema: { type: 'null', nullable: true }, format: 'json' };
   }
 
-  // Already parsed JSON object or array
-  if (typeof body === 'object') {
-    return { schema: inferJsonSchema(body), format: 'json' };
+  // 1. If body is a Buffer, Uint8Array, or ArrayBuffer, decode it to string first
+  if (
+    (typeof Buffer !== 'undefined' && Buffer.isBuffer(body)) ||
+    body instanceof Uint8Array ||
+    body instanceof ArrayBuffer ||
+    (body && typeof body === 'object' && (body.constructor?.name === 'Buffer' || body.constructor?.name === 'Uint8Array'))
+  ) {
+    try {
+      const decoded =
+        typeof Buffer !== 'undefined' && Buffer.isBuffer(body)
+          ? body.toString('utf-8')
+          : new TextDecoder('utf-8').decode(body as Uint8Array | ArrayBuffer);
+      return inferPayloadSchema(decoded, contentType);
+    } catch {
+      // Fall through if decoding fails
+    }
   }
 
+  // 2. String payload (JSON, XML, or plain text)
   if (typeof body === 'string') {
     const trimmed = body.trim();
 
@@ -366,6 +380,28 @@ export function inferPayloadSchema(
       },
       format: 'unknown',
     };
+  }
+
+  // 3. Array-like object (with numeric indices and length)
+  if (
+    body &&
+    typeof body === 'object' &&
+    !Array.isArray(body) &&
+    typeof (body as any).length === 'number' &&
+    (body as any).length >= 0 &&
+    typeof (body as any)[Symbol.iterator] === 'function'
+  ) {
+    try {
+      const arr = Array.from(body as ArrayLike<any>);
+      return { schema: inferJsonSchema(arr), format: 'json' };
+    } catch {
+      // Fall through
+    }
+  }
+
+  // 4. Already parsed JSON object or array
+  if (typeof body === 'object') {
+    return { schema: inferJsonSchema(body), format: 'json' };
   }
 
   return {

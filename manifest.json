@@ -2,7 +2,7 @@
   "id": "schema-drift-detector",
   "name": "Schema Drift Detector",
   "description": "Detect structural changes, breaking regressions, and schema evolutions in API response payloads (JSON & XML).",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "voidenVersion": ">=2.0.0",
   "author": "Divya Raval",
   "type": "community",
